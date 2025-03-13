@@ -1,46 +1,41 @@
-# .NET and C# related ignores
+# ------------------------------------------------------
+# .NET / C# RELATED
+# ------------------------------------------------------
+# Build outputs
 bin/
 obj/
-*.user
-*.suo
-*.csproj.user
-*.vs/
-*.vscode/
-*.lock.json
-.DS_Store
-*.log
-TestResults/
 *.pdb
 *.mdb
 *.opendb
 *.VC.db
+TestResults/
 
-# Configuration files
-appsettings.Development.json
-appsettings.Local.json
-secret.json
+# User-specific files
+*.user
+*.suo
+*.csproj.user
 
-# Azure Functions and local settings
-local.settings.json
+# Visual Studio / IDE settings
+.vs/
+*.vsconfig
 
 # NuGet packages
 *.nupkg
 packages/
 .nuget/
 
+# Configuration files (often contain secrets or environment-specific values)
+appsettings.*.json
+secret.json
+local.settings.json
+
 # Publish outputs
 *.publish/
 .publish/
 
-# Logs and crash reports
-*.log
-crashlog/
-
-# Rider and JetBrains
-.idea/
-*.sln.iml
-
-# Node.js related ignores (Frontend)
+# ------------------------------------------------------
+# NODE / REACT / JAVASCRIPT RELATED
+# ------------------------------------------------------
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -51,32 +46,38 @@ yarn-error.log*
 .cache/
 .pnp
 .pnp.js
-.vscode/
 
-# Build files
+# Build outputs
 build/
 dist/
-coverage/
 *.gz
 
-# Static Web Apps related ignores
-staticwebapp.config.json
-.swa/
-
-# Lint and formatter files
+# Lint / formatter caches
 .eslintcache
 .stylelintcache
 
-# Test related ignores
-*.tsbuildinfo
+# Test related
 coverage/
 *.snap
+*.tsbuildinfo
 
-# OS specific files
+# ------------------------------------------------------
+# LOGS / CRASH REPORTS
+# ------------------------------------------------------
+*.log
+crashlog/
+
+# ------------------------------------------------------
+# IDEs / EDITORS / OS FILES
+# ------------------------------------------------------
+.vscode/
+.idea/
+*.sln.iml
 Thumbs.db
 .DS_Store
 
-# Git related
+# ------------------------------------------------------
+# GIT / MERGE RELATED
+# ------------------------------------------------------
 *.orig
 *.lock
-.idea/
