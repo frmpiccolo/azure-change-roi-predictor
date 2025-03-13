@@ -195,7 +195,10 @@ Contributions are welcome! Please fork the repository and submit pull requests f
 For questions or support, please contact [your.email@example.com](mailto:your.email@example.com).
 ```
 
+---
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
 ```
