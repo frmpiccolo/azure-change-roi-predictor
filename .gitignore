@@ -18,7 +18,6 @@ TestResults/
 # Visual Studio / IDE settings
 .vs/
 .vs/*
-.vs/** */
 *.vsconfig
 
 # NuGet packages
