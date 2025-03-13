@@ -193,7 +193,6 @@ Contributions are welcome! Please fork the repository and submit pull requests f
 ## Contact
 
 For questions or support, please contact [your.email@example.com](mailto:your.email@example.com).
-```
 
 ---
 
@@ -201,4 +200,4 @@ For questions or support, please contact [your.email@example.com](mailto:your.em
 
 This project is licensed under the [MIT License](LICENSE).
 
-```
+
