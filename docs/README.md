@@ -1,8 +1,3 @@
-Below is a complete and adjusted README.md for your solution, covering both backend and frontend details, repository structure, installation, running, deployment, troubleshooting, and more.
-
----
-
-```markdown
 # Change ROI Predictor
 
 ## Overview
