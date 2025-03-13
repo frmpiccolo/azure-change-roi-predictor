@@ -1,0 +1,1 @@
+C:\Dev\Fermin\Projects\azure-change-roi-predictor\frontend\ChangeRoiPredictor.WebApp\obj\Debug\ChangeRoiPredictor.WebApp.esproj.CoreCompileInputs.cache

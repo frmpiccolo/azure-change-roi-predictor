@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ChangeRoiPredictor.Api.props" />
+</Project>

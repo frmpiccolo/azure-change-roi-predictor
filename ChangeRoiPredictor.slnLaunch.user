@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "Novo Perfil",
+    "Projects": [
+      {
+        "Path": "backend\\ChangeRoiPredictor.Api\\ChangeRoiPredictor.Api.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
+        "Path": "frontend\\ChangeRoiPredictor.WebApp\\ChangeRoiPredictor.WebApp.esproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
