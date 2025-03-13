@@ -19,7 +19,7 @@ obj/
 *.VC.db
 TestResults/
 
-# Configuration files
+# Configuration files (these often contain sensitive settings or environment-specific values)
 appsettings.Development.json
 appsettings.Local.json
 appsettings.Production.json
@@ -44,5 +44,5 @@ crashlog/
 .DS_Store
 Thumbs.db
 
-# Rider and JetBrains
+# Rider and JetBrains settings
 .idea/
