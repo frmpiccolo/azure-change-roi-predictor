@@ -192,7 +192,7 @@ Contributions are welcome! Please fork the repository and submit pull requests f
 
 ## Contact
 
-For questions or support, please contact [your.email@example.com](mailto:your.email@example.com).
+For questions or support, please contact [frmpiccolo@gmail.com](mailto:frmpiccolo@gmail.com).
 
 ---
 
