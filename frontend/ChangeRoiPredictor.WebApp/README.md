@@ -105,7 +105,6 @@ The production build can be deployed on Azure App Service or any static hosting 
 
 - **Build Issues:**  
   Ensure that your `tsconfig.json` includes `"jsx": "react-jsx"` under `compilerOptions` to compile JSX/TSX files correctly.
-  
 - **API Connectivity:**  
   Confirm that the backend API is accessible and that the API base URL in `apiService.ts` is correctly configured.
 
@@ -123,4 +122,3 @@ This project is licensed under the MIT License.
 ## Contact
 
 For questions or further assistance, please contact [frmpiccolo@gmail.com](mailto:frmpiccolo@gmail.com).
-

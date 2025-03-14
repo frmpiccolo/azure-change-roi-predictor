@@ -3,4 +3,7 @@
     <StartupCommand>npm start</StartupCommand>
     <WorkingDirectory>$(ProjectDir)</WorkingDirectory>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="src\assets\" />
+  </ItemGroup>
 </Project>
