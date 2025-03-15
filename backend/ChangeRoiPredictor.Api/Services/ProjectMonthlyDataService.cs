@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace ChangeRoiPredictor.Api.Services
 {
-    public class ProjectMonthlyDataervice : IProjectMonthlyDataervice
+    public class ProjectMonthlyDataService : IProjectMonthlyDataService
     {
         private readonly ApplicationDbContext _context;
 
-        public ProjectMonthlyDataervice(ApplicationDbContext context)
+        public ProjectMonthlyDataService(ApplicationDbContext context)
         {
             _context = context;
         }

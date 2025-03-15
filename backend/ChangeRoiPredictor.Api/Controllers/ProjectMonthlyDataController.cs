@@ -9,9 +9,9 @@ namespace ChangeRoiPredictor.Api.Controllers
     [Route("api/[controller]")]
     public class ProjectMonthlyDataController : ControllerBase
     {
-        private readonly IProjectMonthlyDataervice _monthlyDataService;
+        private readonly IProjectMonthlyDataService _monthlyDataService;
 
-        public ProjectMonthlyDataController(IProjectMonthlyDataervice monthlyDataService)
+        public ProjectMonthlyDataController(IProjectMonthlyDataService monthlyDataService)
         {
             _monthlyDataService = monthlyDataService;
         }
