@@ -25,9 +25,7 @@ const ProjectMonthlyDataForm: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (projectId) {
-      loadMonthlyData();
-    }
+    if (projectId) loadMonthlyData();
   }, [projectId]);
 
   const loadMonthlyData = () => {
@@ -40,51 +38,32 @@ const ProjectMonthlyDataForm: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setCurrentData((prev) => ({
-      ...prev,
-      [name]: Number(value),
-    }));
+    setCurrentData((prev) => ({ ...prev, [name]: Number(value) }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!currentData || !projectId) {
-      console.error('Dados mensais ou ProjectId n�o definidos');
-      return;
-    }
+    if (!currentData || !projectId) return;
 
-    if (!currentData.id) {
-      createMonthlyData(Number(projectId), {
-        projectId: Number(projectId),
-        month: currentData.month || 1,
-        year: currentData.year || new Date().getFullYear(),
-        monthlyBudget: currentData.monthlyBudget || 0,
-        monthlyPeopleImpacted: currentData.monthlyPeopleImpacted || 0,
-        expectedResult: currentData.expectedResult || 0,
-        obtainedResult: currentData.obtainedResult || 0,
+    const action =
+      isEditing && currentData.id
+        ? updateMonthlyData(
+            Number(projectId),
+            currentData.id,
+            currentData as ProjectMonthlyData
+          )
+        : createMonthlyData(
+            Number(projectId),
+            currentData as ProjectMonthlyData
+          );
+
+    action
+      .then(() => {
+        loadMonthlyData();
+        resetForm();
       })
-        .then(() => {
-          loadMonthlyData();
-          resetForm();
-        })
-        .catch(console.error);
-    } else {
-      updateMonthlyData(Number(projectId), currentData.id, {
-        projectId: Number(projectId),
-        month: currentData.month || 1,
-        year: currentData.year || new Date().getFullYear(),
-        monthlyBudget: currentData.monthlyBudget || 0,
-        monthlyPeopleImpacted: currentData.monthlyPeopleImpacted || 0,
-        expectedResult: currentData.expectedResult || 0,
-        obtainedResult: currentData.obtainedResult || 0,
-      })
-        .then(() => {
-          loadMonthlyData();
-          resetForm();
-        })
-        .catch(console.error);
-    }
+      .catch(console.error);
   };
 
   const editData = (data: ProjectMonthlyData) => {
@@ -93,11 +72,10 @@ const ProjectMonthlyDataForm: React.FC = () => {
   };
 
   const deleteData = (id: number) => {
-    if (window.confirm('Confirm deletion?')) {
+    if (window.confirm('Confirm deletion?'))
       deleteMonthlyData(Number(projectId), id)
         .then(loadMonthlyData)
         .catch(console.error);
-    }
   };
 
   const resetForm = () => {
@@ -113,134 +91,83 @@ const ProjectMonthlyDataForm: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Manage Monthly Data</h2>
+    <div className="space-y-4">
+      <h2 className="text-3xl font-bold text-primary">Manage Monthly Data</h2>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-4 rounded shadow space-y-4"
-      >
-        <div>
-          <label className="block font-semibold">Month *</label>
-          <input
-            type="number"
-            name="month"
-            value={currentData.month}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            min={1}
-            max={12}
-            required
-          />
+      <form onSubmit={handleSubmit} className="card bg-base-100 shadow-xl p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[
+            'month',
+            'year',
+            'monthlyBudget',
+            'monthlyPeopleImpacted',
+            'expectedResult',
+            'obtainedResult',
+          ].map((field) => (
+            <div key={field}>
+              <label className="label font-semibold capitalize">
+                {field.replace(/([A-Z])/g, ' $1')}
+              </label>
+              <input
+                type="number"
+                name={field}
+                value={currentData[field as keyof ProjectMonthlyData] || ''}
+                onChange={handleChange}
+                className="input input-bordered w-full"
+                required={['month', 'year', 'monthlyBudget'].includes(field)}
+              />
+            </div>
+          ))}
         </div>
 
-        <div>
-          <label className="block font-semibold">Year *</label>
-          <input
-            type="number"
-            name="year"
-            value={currentData.year}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">Monthly Budget *</label>
-          <input
-            type="number"
-            name="monthlyBudget"
-            value={currentData.monthlyBudget}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">Monthly People Impacted</label>
-          <input
-            type="number"
-            name="monthlyPeopleImpacted"
-            value={currentData.monthlyPeopleImpacted}
-            onChange={handleChange}
-            className="border p-2 w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">Expected Result</label>
-          <input
-            type="number"
-            name="expectedResult"
-            value={currentData.expectedResult}
-            onChange={handleChange}
-            className="border p-2 w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">Obtained Result</label>
-          <input
-            type="number"
-            name="obtainedResult"
-            value={currentData.obtainedResult}
-            onChange={handleChange}
-            className="border p-2 w-full"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="bg-green-500 text-white px-4 py-2 rounded"
-        >
-          {isEditing ? 'Update Monthly Data' : 'Add Monthly Data'}
-        </button>
-
-        {isEditing && (
-          <button
-            type="button"
-            onClick={resetForm}
-            className="bg-gray-300 text-gray-800 px-4 py-2 rounded ml-2"
-          >
-            Cancel
+        <div className="mt-4 space-x-2">
+          <button type="submit" className="btn btn-primary">
+            {isEditing ? 'Update' : 'Add'}
           </button>
-        )}
+          {isEditing && (
+            <button
+              type="button"
+              onClick={resetForm}
+              className="btn btn-secondary"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </form>
 
-      <div className="mt-6 bg-white p-4 rounded shadow">
-        <table className="w-full">
+      <div className="overflow-x-auto">
+        <table className="table table-zebra w-full">
           <thead>
             <tr>
-              <th className="text-left p-2">Month</th>
-              <th className="text-left p-2">Year</th>
-              <th className="text-left p-2">Budget</th>
-              <th className="text-left p-2">Impacted</th>
-              <th className="text-left p-2">Expected</th>
-              <th className="text-left p-2">Obtained</th>
-              <th className="text-left p-2">Actions</th>
+              <th>Month</th>
+              <th>Year</th>
+              <th>Budget</th>
+              <th>Impacted</th>
+              <th>Expected</th>
+              <th>Obtained</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {monthlyData.map((data) => (
               <tr key={data.id}>
-                <td className="p-2">{data.month}</td>
-                <td className="p-2">{data.year}</td>
-                <td className="p-2">{data.monthlyBudget}</td>
-                <td className="p-2">{data.monthlyPeopleImpacted}</td>
-                <td className="p-2">{data.expectedResult}</td>
-                <td className="p-2">{data.obtainedResult}</td>
-                <td className="p-2 space-x-2">
+                <td>{data.month}</td>
+                <td>{data.year}</td>
+                <td>{data.monthlyBudget}</td>
+                <td>{data.monthlyPeopleImpacted}</td>
+                <td>{data.expectedResult}</td>
+                <td>{data.obtainedResult}</td>
+                <td className="space-x-2">
                   <button
+                    className="btn btn-xs btn-info"
                     onClick={() => editData(data)}
-                    className="text-blue-600"
                   >
                     Edit
                   </button>
                   <button
+                    className="btn btn-xs btn-error"
                     onClick={() => deleteData(data.id)}
-                    className="text-red-600"
                   >
                     Delete
                   </button>
@@ -251,10 +178,7 @@ const ProjectMonthlyDataForm: React.FC = () => {
         </table>
       </div>
 
-      <button
-        className="mt-4 bg-gray-400 text-white px-4 py-2 rounded"
-        onClick={() => navigate('/projects')}
-      >
+      <button className="btn btn-outline" onClick={() => navigate('/projects')}>
         Back to Projects
       </button>
     </div>
