@@ -7,55 +7,56 @@ const ProjectsList: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
-    getProjects()
-      .then((data) => setProjects(data))
-      .catch((err) => console.error(err));
+    getProjects().then(setProjects).catch(console.error);
   }, []);
 
   return (
-    <div>
-      <div className="flex justify-between mb-4">
-        <h2 className="text-2xl font-bold">Projects</h2>
-        <Link
-          to="/projects/new"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-primary">Projects</h2>
+        <Link to="/projects/new" className="btn btn-primary">
           New Project
         </Link>
       </div>
-      <div className="bg-white shadow rounded p-4">
-        <table className="w-full">
+
+      <div className="overflow-x-auto bg-base-100 shadow rounded-lg">
+        <table className="table w-full">
           <thead>
-            <tr>
-              <th className="text-left p-2">Name</th>
-              <th className="text-left p-2">Budget</th>
-              <th className="text-left p-2">Actions</th>
+            <tr className="bg-primary text-white">
+              <th>Name</th>
+              <th>Budget</th>
+              <th className="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {projects.map((proj) => (
-              <tr key={proj.id}>
-                <td className="p-2">{proj.name}</td>
-                <td className="p-2">{proj.totalBudget}</td>
-                <td className="p-2 space-x-2">
+              <tr key={proj.id} className="hover:bg-base-200">
+                <td>{proj.name}</td>
+                <td>${proj.totalBudget.toLocaleString()}</td>
+                <td className="flex justify-center space-x-2">
                   <Link
                     to={`/projects/${proj.id}/edit`}
-                    className="text-blue-600"
+                    className="btn btn-sm btn-info"
                   >
                     Edit
                   </Link>
                   <Link
                     to={`/projects/${proj.id}/monthly-data`}
-                    className="text-green-600"
+                    className="btn btn-sm btn-success"
                   >
                     Monthly Data
                   </Link>
-                  {/* Additional actions like Delete */}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-4">
+        <Link to="/projects/new" className="btn btn-secondary">
+          Create New Project
+        </Link>
       </div>
     </div>
   );

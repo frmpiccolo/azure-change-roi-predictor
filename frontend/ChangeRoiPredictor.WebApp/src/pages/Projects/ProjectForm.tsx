@@ -91,170 +91,130 @@ const ProjectForm: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">
+    <div className="card bg-base-100 shadow-xl p-8">
+      <h2 className="text-3xl font-bold text-primary mb-6">
         {id ? 'Edit Project' : 'New Project'}
       </h2>
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 bg-white p-4 rounded shadow"
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
-        <div>
-          <label className="block font-semibold">Name *</label>
-          <input
-            type="text"
-            name="name"
-            value={project.name}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            required
-          />
-        </div>
+        <input
+          type="text"
+          name="name"
+          value={project.name}
+          onChange={handleChange}
+          placeholder="Name *"
+          className="input input-bordered w-full"
+          required
+        />
 
-        <div>
-          <label className="block font-semibold">Description</label>
-          <input
-            type="text"
-            name="description"
-            value={project.description}
-            onChange={handleChange}
-            className="border p-2 w-full"
-          />
-        </div>
+        <input
+          type="text"
+          name="description"
+          value={project.description}
+          onChange={handleChange}
+          placeholder="Description"
+          className="input input-bordered w-full"
+        />
 
-        <div>
-          <label className="block font-semibold">Duration (Months)</label>
-          <input
-            type="number"
-            name="durationInMonths"
-            value={project.durationInMonths}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            required
-          />
-        </div>
+        <input
+          type="number"
+          name="durationInMonths"
+          value={project.durationInMonths}
+          onChange={handleChange}
+          placeholder="Duration (Months) *"
+          className="input input-bordered w-full"
+          required
+        />
 
-        <div>
-          <label className="block font-semibold">Start Date</label>
-          <input
-            type="date"
-            name="startDate"
-            value={project.startDate.split('T')[0]}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            required
-          />
-        </div>
+        <input
+          type="date"
+          name="startDate"
+          value={project.startDate}
+          onChange={handleChange}
+          className="input input-bordered w-full"
+          required
+        />
 
-        <div>
-          <label className="block font-semibold">End Date</label>
-          <input
-            type="date"
-            name="endDate"
-            value={project.endDate.split('T')[0]}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            required
-          />
-        </div>
+        <input
+          type="date"
+          name="endDate"
+          value={project.endDate}
+          onChange={handleChange}
+          className="input input-bordered w-full"
+          required
+        />
 
-        <div>
-          <label className="block font-semibold">Total Budget</label>
-          <input
-            type="number"
-            name="totalBudget"
-            value={project.totalBudget}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            required
-          />
-        </div>
+        <input
+          type="number"
+          name="totalBudget"
+          value={project.totalBudget}
+          onChange={handleChange}
+          placeholder="Total Budget *"
+          className="input input-bordered w-full"
+          required
+        />
 
-        <div>
-          <label className="block font-semibold">
-            Number of People Affected
-          </label>
-          <input
-            type="number"
-            name="numberOfPeopleAffected"
-            value={project.numberOfPeopleAffected}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            required
-          />
-        </div>
+        <input
+          type="number"
+          name="numberOfPeopleAffected"
+          value={project.numberOfPeopleAffected}
+          onChange={handleChange}
+          placeholder="People Affected *"
+          className="input input-bordered w-full"
+          required
+        />
 
-        <div>
-          <label className="block font-semibold">Complexity Rating (1-5)</label>
-          <input
-            type="number"
-            name="complexityRating"
-            value={project.complexityRating || ''}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            min={1}
-            max={5}
-          />
-        </div>
+        <input
+          type="number"
+          name="complexityRating"
+          value={project.complexityRating || ''}
+          onChange={handleChange}
+          placeholder="Complexity (1-5)"
+          min={1}
+          max={5}
+          className="input input-bordered w-full"
+        />
 
-        <div>
-          <label className="block font-semibold">Engagement Score (1-18)</label>
-          <input
-            type="number"
-            name="engagementScore"
-            value={project.engagementScore}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            min={1}
-            max={18}
-          />
-        </div>
+        <input
+          type="number"
+          name="engagementScore"
+          value={project.engagementScore || ''}
+          onChange={handleChange}
+          placeholder="Engagement (1-18)"
+          min={1}
+          max={18}
+          className="input input-bordered w-full"
+        />
 
-        <div>
-          <label className="block font-semibold">Risk Level (1-5)</label>
-          <input
-            type="number"
-            name="riskLevel"
-            value={project.riskLevel}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            min={1}
-            max={5}
-          />
-        </div>
+        <input
+          type="number"
+          name="riskLevel"
+          value={project.riskLevel || ''}
+          onChange={handleChange}
+          placeholder="Risk (1-5)"
+          min={1}
+          max={5}
+          className="input input-bordered w-full"
+        />
 
-        <div>
-          <label className="block font-semibold">Readiness Level (1-18)</label>
-          <input
-            type="number"
-            name="readinessLevel"
-            value={project.readinessLevel}
-            onChange={handleChange}
-            className="border p-2 w-full"
-            min={1}
-            max={18}
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">Methodology</label>
-          <select
-            name="methodology"
-            value={project.methodology}
-            onChange={handleChange}
-            className="border p-2 w-full"
-          >
-            <option value="">Select Methodology</option>
-            <option value="Agile">Agile</option>
-            <option value="Waterfall">Waterfall</option>
-          </select>
-        </div>
+        <select
+          name="methodology"
+          value={project.methodology}
+          onChange={handleChange}
+          className="select select-bordered w-full"
+        >
+          <option value="">Select Methodology</option>
+          <option value="Agile">Agile</option>
+          <option value="Waterfall">Waterfall</option>
+        </select>
 
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="btn btn-primary col-span-1 md:col-span-2"
         >
-          Save
+          Save Project
         </button>
       </form>
     </div>
