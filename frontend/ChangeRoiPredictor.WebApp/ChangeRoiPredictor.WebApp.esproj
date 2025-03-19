@@ -4,6 +4,9 @@
     <WorkingDirectory>$(ProjectDir)</WorkingDirectory>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="src\App.css" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="src\assets\" />
   </ItemGroup>
 </Project>

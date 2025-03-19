@@ -27,6 +27,24 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IProjectMonthlyDatService, ProjectMonthlyDataService>();
 builder.Services.AddScoped<IRoiService, RoiService>();
 builder.Services.AddScoped<IBlobService, BlobService>();
+builder.Services.AddScoped<IProjectMonthlyDataService, ProjectMonthlyDataService>();
+
+// Configure CORS: read allowed origins from configuration; default to localhost:3000 if none provided.
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+if (allowedOrigins == null || allowedOrigins.Length == 0)
+{
+    allowedOrigins = new string[] { "http://localhost:3000" };
+}
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 // Add controllers and Swagger.
 builder.Services.AddControllers();
@@ -35,7 +53,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Optional: Apply migrations on startup.
+// Apply migrations on startup (optional).
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -49,5 +67,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Enable CORS with the policy "AllowFrontend"
+app.UseCors("AllowFrontend");
+
 app.MapControllers();
 app.Run();

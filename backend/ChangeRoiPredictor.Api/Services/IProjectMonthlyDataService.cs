@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using ChangeRoiPredictor.Api.DTOs;
 
 namespace ChangeRoiPredictor.Api.Services
-{
-    public interface IProjectMonthlyDatService
+{    
+    public interface IProjectMonthlyDataService
     {
         Task<IEnumerable<ProjectMonthlyDataDto>> GetAllMonthlyDataForProjectAsync(int projectId);
         Task<ProjectMonthlyDataDto?> GetMonthlyDataByIdAsync(int id);
