@@ -24,7 +24,7 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
 
 // Register project and monthly data services.
 builder.Services.AddScoped<IProjectService, ProjectService>();
-builder.Services.AddScoped<IProjectMonthlyDatService, ProjectMonthlyDataService>();
+builder.Services.AddScoped<IProjectMonthlyDataService, ProjectMonthlyDataService>();
 builder.Services.AddScoped<IRoiService, RoiService>();
 builder.Services.AddScoped<IBlobService, BlobService>();
 builder.Services.AddScoped<IProjectMonthlyDataService, ProjectMonthlyDataService>();

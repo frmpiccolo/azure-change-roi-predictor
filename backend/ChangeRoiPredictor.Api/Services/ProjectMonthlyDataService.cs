@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ChangeRoiPredictor.Api.Services
 {
 
-    public class ProjectMonthlyDataService(ApplicationDbContext context) : IProjectMonthlyDatService
+    public class ProjectMonthlyDataService(ApplicationDbContext context) : IProjectMonthlyDataService
     {
         private readonly ApplicationDbContext _context = context;
 
