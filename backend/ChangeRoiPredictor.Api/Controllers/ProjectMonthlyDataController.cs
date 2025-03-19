@@ -8,7 +8,7 @@ namespace ChangeRoiPredictor.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class ProjectMonthlyDataController : ControllerBase
-    {
+    {        
         private readonly IProjectMonthlyDataService _monthlyDataService;
 
         public ProjectMonthlyDataController(IProjectMonthlyDataService monthlyDataService)
@@ -42,6 +42,9 @@ namespace ChangeRoiPredictor.Api.Controllers
                 return BadRequest(ModelState);
 
             var createdData = await _monthlyDataService.CreateMonthlyDataAsync(projectId, dto);
+
+            if (createdData == null) return NotFound("project not found");
+
             return CreatedAtAction(nameof(GetMonthlyData), new { id = createdData.Id }, createdData);
         }
 

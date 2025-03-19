@@ -13,12 +13,12 @@ public class UpdateProjectDto
     /// Name of the project.
     /// </summary>
     [Required]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Description of the project.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Duration of the project in months.
@@ -30,13 +30,13 @@ public class UpdateProjectDto
     /// Start date of the project.
     /// </summary>
     [Required]
-    public DateTime StartDate { get; set; }
+    public DateOnly StartDate { get; set; }
 
     /// <summary>
     /// End date of the project.
     /// </summary>
     [Required]
-    public DateTime EndDate { get; set; }
+    public DateOnly EndDate { get; set; }
 
     /// <summary>
     /// Total budget allocated for the project.
@@ -73,10 +73,10 @@ public class UpdateProjectDto
     /// <summary>
     /// (Optional) Methodology used for the project (e.g., "Agile", "Waterfall").
     /// </summary>
-    public string Methodology { get; set; }
+    public string? Methodology { get; set; }
 
     /// <summary>
     /// Collection of monthly data entries for the project.
     /// </summary>
-    public IEnumerable<UpdateProjectMonthlyDataDto> MonthlyData { get; set; }
+    public IEnumerable<UpdateProjectMonthlyDataDto>? MonthlyData { get; set; }
 }

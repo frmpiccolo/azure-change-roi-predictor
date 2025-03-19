@@ -8,14 +8,10 @@ using System.Threading.Tasks;
 
 namespace ChangeRoiPredictor.Api.Services
 {
-    public class ProjectMonthlyDataService : IProjectMonthlyDataService
-    {
-        private readonly ApplicationDbContext _context;
 
-        public ProjectMonthlyDataService(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+    public class ProjectMonthlyDataService(ApplicationDbContext context) : IProjectMonthlyDataService
+    {
+        private readonly ApplicationDbContext _context = context;
 
         public async Task<IEnumerable<ProjectMonthlyDataDto>> GetAllMonthlyDataForProjectAsync(int projectId)
         {
@@ -35,7 +31,7 @@ namespace ChangeRoiPredictor.Api.Services
             });
         }
 
-        public async Task<ProjectMonthlyDataDto> GetMonthlyDataByIdAsync(int id)
+        public async Task<ProjectMonthlyDataDto?> GetMonthlyDataByIdAsync(int id)
         {
             var data = await _context.ProjectMonthlyData.FindAsync(id);
             if (data == null)
@@ -53,7 +49,7 @@ namespace ChangeRoiPredictor.Api.Services
             };
         }
 
-        public async Task<ProjectMonthlyDataDto> CreateMonthlyDataAsync(int projectId, CreateProjectMonthlyDataDto dto)
+        public async Task<ProjectMonthlyDataDto?> CreateMonthlyDataAsync(int projectId, CreateProjectMonthlyDataDto dto)
         {
             var monthlyData = new ProjectMonthlyData
             {
@@ -81,7 +77,7 @@ namespace ChangeRoiPredictor.Api.Services
             };
         }
 
-        public async Task<ProjectMonthlyDataDto> UpdateMonthlyDataAsync(int id, UpdateProjectMonthlyDataDto dto)
+        public async Task<ProjectMonthlyDataDto?> UpdateMonthlyDataAsync(int id, UpdateProjectMonthlyDataDto dto)
         {
             var monthlyData = await _context.ProjectMonthlyData.FindAsync(id);
             if (monthlyData == null)
