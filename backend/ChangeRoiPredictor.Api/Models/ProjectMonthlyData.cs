@@ -18,7 +18,7 @@ public class ProjectMonthlyData
     /// <summary>
     /// Navigation property for the project.
     /// </summary>
-    public Project Project { get; set; }
+    public Project? Project { get; set; }
 
     /// <summary>
     /// Month of the data record.
@@ -48,5 +48,5 @@ public class ProjectMonthlyData
     /// <summary>
     /// Obtained result for the month.
     /// </summary>
-    public decimal ObtainedResult { get; set; }        
+    public decimal ObtainedResult { get; set; }
 }

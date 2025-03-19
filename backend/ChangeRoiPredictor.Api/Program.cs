@@ -1,15 +1,32 @@
 using ChangeRoiPredictor.Api.Data;
+using ChangeRoiPredictor.Api.Options;
 using ChangeRoiPredictor.Api.Services;
 using Microsoft.EntityFrameworkCore;
+using Azure.Identity;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddAzureKeyVault(
+    new Uri(builder.Configuration["AzureOptions:AzureKeyVaultUrl"]!),
+    new DefaultAzureCredential());
+
+builder.Services.Configure<AzureKeyVaultOptions>(builder.Configuration);
+builder.Services.Configure<AzureOptions>(builder.Configuration.GetSection(nameof(AzureOptions)));
+
 // Configure SQL Server connection.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
+{
+    AzureKeyVaultOptions azureKeyVaultOptions = serviceProvider.GetRequiredService<IOptions<AzureKeyVaultOptions>>().Value;
+
+    options.UseAzureSql(azureKeyVaultOptions.AzureSqlConnectionString);
+});
 
 // Register project and monthly data services.
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IProjectMonthlyDatService, ProjectMonthlyDataService>();
+builder.Services.AddScoped<IRoiService, RoiService>();
+builder.Services.AddScoped<IBlobService, BlobService>();
 builder.Services.AddScoped<IProjectMonthlyDataService, ProjectMonthlyDataService>();
 
 // Configure CORS: read allowed origins from configuration; default to localhost:3000 if none provided.

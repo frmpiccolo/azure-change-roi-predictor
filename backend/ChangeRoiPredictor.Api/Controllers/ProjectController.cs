@@ -7,14 +7,10 @@ namespace ChangeRoiPredictor.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProjectController : ControllerBase
+    public class ProjectController(IProjectService projectService, IRoiService roiService) : ControllerBase
     {
-        private readonly IProjectService _projectService;
-
-        public ProjectController(IProjectService projectService)
-        {
-            _projectService = projectService;
-        }
+        private readonly IProjectService _projectService = projectService;
+        private readonly IRoiService _roiService = roiService;
 
         // GET: api/project
         [HttpGet]
@@ -66,6 +62,17 @@ namespace ChangeRoiPredictor.Api.Controllers
             if (!result)
                 return NotFound();
             return NoContent();
+        }
+
+        // added just for test purposes, remove if not necessary
+        [HttpGet("insight/{id}")]
+        public async Task<IActionResult> GetInsightsAsync(int id)
+        {
+            var project = await _projectService.GetProjectByIdAsync(id);
+
+            if (project == null) return NotFound();
+
+            return Ok(await _roiService.GetProjectInsightsAsync(project));
         }
     }
 }

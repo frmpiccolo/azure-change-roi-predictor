@@ -16,12 +16,12 @@ public class ProjectDto
     /// <summary>
     /// Name of the project.
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Description of the project.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Duration of the project in months.
@@ -31,12 +31,12 @@ public class ProjectDto
     /// <summary>
     /// Start date of the project.
     /// </summary>
-    public DateTime StartDate { get; set; }
+    public DateOnly StartDate { get; set; }
 
     /// <summary>
     /// End date of the project.
     /// </summary>
-    public DateTime EndDate { get; set; }
+    public DateOnly EndDate { get; set; }
 
     /// <summary>
     /// Total budget allocated for the project.
@@ -71,10 +71,10 @@ public class ProjectDto
     /// <summary>
     /// Methodology used for the project (e.g., "Agile", "Waterfall").
     /// </summary>
-    public string Methodology { get; set; }
+    public string? Methodology { get; set; }
 
     /// <summary>
     /// Collection of monthly data entries for the project.
     /// </summary>
-    public IEnumerable<ProjectMonthlyDataDto> MonthlyData { get; set; }
+    public IEnumerable<ProjectMonthlyDataDto>? MonthlyData { get; set; }
 }
