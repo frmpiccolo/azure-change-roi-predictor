@@ -8,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace ChangeRoiPredictor.Api.Services
 {
-    public class ProjectService : IProjectService
+    public class ProjectService(ApplicationDbContext context) : IProjectService
     {
-        private readonly ApplicationDbContext _context;
-
-        public ProjectService(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         public async Task<IEnumerable<ProjectDto>> GetAllProjectsAsync()
         {
@@ -26,7 +21,7 @@ namespace ChangeRoiPredictor.Api.Services
             return projects.Select(MapToProjectDto);
         }
 
-        public async Task<ProjectDto> GetProjectByIdAsync(int id)
+        public async Task<ProjectDto?> GetProjectByIdAsync(int id)
         {
             var project = await _context.Projects
                 .Include(p => p.MonthlyData)
@@ -53,7 +48,7 @@ namespace ChangeRoiPredictor.Api.Services
                     MonthlyPeopleImpacted = m.MonthlyPeopleImpacted,
                     ExpectedResult = m.ExpectedResult,
                     ObtainedResult = m.ObtainedResult
-                }).ToList()
+                }).ToList() ?? []
             };
 
             _context.Projects.Add(project);
@@ -62,7 +57,7 @@ namespace ChangeRoiPredictor.Api.Services
             return MapToProjectDto(project);
         }
 
-        public async Task<ProjectDto> UpdateProjectAsync(int id, UpdateProjectDto dto)
+        public async Task<ProjectDto?> UpdateProjectAsync(int id, UpdateProjectDto dto)
         {
             var project = await _context.Projects
                 .Include(p => p.MonthlyData)
@@ -82,7 +77,7 @@ namespace ChangeRoiPredictor.Api.Services
             _context.ProjectMonthlyData.RemoveRange(project.MonthlyData);
             if (dto.MonthlyData != null)
             {
-                project.MonthlyData = dto.MonthlyData.Select(m => new ProjectMonthlyData
+                project.MonthlyData = [.. dto.MonthlyData.Select(m => new ProjectMonthlyData
                 {
                     Month = m.Month,
                     Year = m.Year,
@@ -90,7 +85,7 @@ namespace ChangeRoiPredictor.Api.Services
                     MonthlyPeopleImpacted = m.MonthlyPeopleImpacted,
                     ExpectedResult = m.ExpectedResult,
                     ObtainedResult = m.ObtainedResult
-                }).ToList();
+                })];
             }
 
             await _context.SaveChangesAsync();
@@ -131,7 +126,7 @@ namespace ChangeRoiPredictor.Api.Services
                     MonthlyPeopleImpacted = m.MonthlyPeopleImpacted,
                     ExpectedResult = m.ExpectedResult,
                     ObtainedResult = m.ObtainedResult
-                }).ToList()
+                }).ToList() ?? []
             };
         }
     }

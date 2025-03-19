@@ -16,7 +16,7 @@ public class Project
     /// <summary>
     /// Name of the project.
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Description of the project.
@@ -31,12 +31,12 @@ public class Project
     /// <summary>
     /// Start date of the project.
     /// </summary>
-    public DateTime StartDate { get; set; }
+    public DateOnly StartDate { get; set; }
 
     /// <summary>
     /// End date of the project.
     /// </summary>
-    public DateTime EndDate { get; set; }
+    public DateOnly EndDate { get; set; }
 
     /// <summary>
     /// Total budget allocated for the project.
@@ -91,5 +91,5 @@ public class Project
     /// <summary>
     /// Collection of monthly data entries for the project.
     /// </summary>
-    public ICollection<ProjectMonthlyData> MonthlyData { get; set; }
+    public required ICollection<ProjectMonthlyData> MonthlyData { get; set; }
 }
