@@ -74,7 +74,9 @@ namespace ChangeRoiPredictor.Api.Services
             project.NumberOfPeopleAffected = dto.NumberOfPeopleAffected;
 
             // Update monthly data: simple approach by removing existing data and adding new data.
-            _context.ProjectMonthlyData.RemoveRange(project.MonthlyData);
+            if (project.MonthlyData != null)
+                _context.ProjectMonthlyData.RemoveRange(project.MonthlyData);
+
             if (dto.MonthlyData != null)
             {
                 project.MonthlyData = [.. dto.MonthlyData.Select(m => new ProjectMonthlyData

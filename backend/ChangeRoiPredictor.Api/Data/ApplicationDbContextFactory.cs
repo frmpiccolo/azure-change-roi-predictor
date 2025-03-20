@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 
 namespace ChangeRoiPredictor.Api.Data
@@ -19,7 +20,16 @@ namespace ChangeRoiPredictor.Api.Data
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            // Read the environment from configuration.            
+            var environment = configuration["ASPNETCORE_ENVIRONMENT"] ?? "Development";
+            string connectionString = configuration["AzureSqlConnectionString"] ?? "";
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException("The connection string has not been initialized.");
+            }
+
             optionsBuilder.UseSqlServer(connectionString);
 
             return new ApplicationDbContext(optionsBuilder.Options);

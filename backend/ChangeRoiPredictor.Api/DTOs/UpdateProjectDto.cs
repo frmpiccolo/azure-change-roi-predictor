@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChangeRoiPredictor.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -74,6 +75,16 @@ public class UpdateProjectDto
     /// (Optional) Methodology used for the project (e.g., "Agile", "Waterfall").
     /// </summary>
     public string? Methodology { get; set; }
+
+    /// <summary>
+    /// Overall ROI of the project.
+    /// </summary>
+    public decimal? OverallROI { get; set; }
+
+    /// <summary>
+    /// Collection of insights for the project.
+    /// </summary>
+    public ICollection<ProjectInsight>? ProjectInsights { get; set; }
 
     /// <summary>
     /// Collection of monthly data entries for the project.

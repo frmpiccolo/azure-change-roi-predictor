@@ -5,5 +5,5 @@ namespace ChangeRoiPredictor.Api.Services;
 
 public interface IRoiService
 {
-    Task<ProjectInsights?> GetProjectInsightsAsync(ProjectDto project);
+    Task<ICollection<ProjectInsight>?> GetProjectInsightsAsync(ProjectDto project);
 }

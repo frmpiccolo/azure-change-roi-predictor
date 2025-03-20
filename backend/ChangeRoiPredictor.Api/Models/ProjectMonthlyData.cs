@@ -48,5 +48,15 @@ public class ProjectMonthlyData
     /// <summary>
     /// Obtained result for the month.
     /// </summary>
-    public decimal ObtainedResult { get; set; }
+    public decimal? ObtainedResult { get; set; }
+
+    /// <summary>
+    /// Monthly ROI for the project.
+    /// </summary>
+    public decimal? MonthlyROI { get; set; }
+
+    /// <summary>
+    /// Collection of insights for the project in the month.
+    /// </summary>
+    public ICollection<ProjectMonthlyInsight>? ProjectMonthlyInsights { get; set; }
 }
