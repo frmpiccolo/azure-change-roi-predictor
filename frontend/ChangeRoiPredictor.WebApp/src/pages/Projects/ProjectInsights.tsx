@@ -1,41 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import GenericTable, { Column } from '../../components/GenericTable';
-import { getProjectInsights } from '../../services/apiService';
-
-interface Insight {
-  id: number;
-  title: string;
-  description: string;
-  date: string;
-}
+import { ProjectInsight } from '../../types/ProjectInsight';
+import {
+  getProjectInsights,
+  deleteProjectInsight,
+} from '../../services/apiService';
 
 const ProjectInsights: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const [insights, setInsights] = useState<Insight[]>([]);
+  const [insights, setInsights] = useState<ProjectInsight[]>([]);
 
   useEffect(() => {
-    if (projectId) {
-      getProjectInsights(Number(projectId)).then((res) =>
-        setInsights(res.data)
-      );
-    }
+    if (projectId) getProjectInsights(Number(projectId)).then(setInsights);
   }, [projectId]);
 
-  const columns: Column<Insight>[] = [
-    { label: 'Title', key: 'title' },
+  const columns: Column<ProjectInsight>[] = [
     { label: 'Description', key: 'description' },
-    {
-      label: 'Date',
-      key: 'date',
-      render: (item) => new Date(item.date).toLocaleDateString(),
-    },
   ];
+
+  const handleDelete = (insight: ProjectInsight) => {
+    deleteProjectInsight(insight.id).then(() =>
+      setInsights((prev) => prev.filter((i) => i.id !== insight.id))
+    );
+  };
 
   return (
     <div>
-      <h2 className="text-3xl font-bold text-primary mb-4">Project Insights</h2>
-      <GenericTable data={insights} columns={columns} />
+      <GenericTable data={insights} columns={columns} onDelete={handleDelete} />
     </div>
   );
 };

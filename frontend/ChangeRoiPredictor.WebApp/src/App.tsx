@@ -32,7 +32,7 @@ function App() {
                   element={<ProjectInsights />}
                 />
                 <Route
-                  path="/projects/:projectId/monthly-insights"
+                  path="/monthly-data/:monthlyDataId/insights"
                   element={<MonthlyInsights />}
                 />
                 <Route path="*" element={<NotFound />} />
