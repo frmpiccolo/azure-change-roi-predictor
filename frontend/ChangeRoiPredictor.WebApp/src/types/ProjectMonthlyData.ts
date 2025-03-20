@@ -7,4 +7,5 @@ export interface ProjectMonthlyData {
   monthlyPeopleImpacted: number;
   expectedResult: number;
   obtainedResult: number;
+  monthlyROI?: number;
 }

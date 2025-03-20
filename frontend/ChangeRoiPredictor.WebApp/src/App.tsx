@@ -5,6 +5,8 @@ import Dashboard from './pages/Dashboard';
 import ProjectsList from './pages/Projects/ProjectsList';
 import ProjectForm from './pages/Projects/ProjectForm';
 import ProjectMonthlyDataForm from './pages/Projects/ProjectMonthlyDataForm';
+import ProjectInsights from './pages/Projects/ProjectInsights';
+import MonthlyInsights from './pages/Projects/MonthlyInsights';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -12,10 +14,8 @@ function App() {
     <Router>
       <div className="min-h-screen bg-cover bg-center">
         <div className="min-h-screen bg-base-200/90 backdrop-blur-sm flex">
-          {/* Sidebar */}
           <Sidebar />
 
-          {/* Main content */}
           <div className="flex-1 p-6 overflow-auto">
             <div className="card bg-base-100 shadow-xl rounded-box p-6">
               <Routes>
@@ -26,6 +26,14 @@ function App() {
                 <Route
                   path="/projects/:id/monthly-data"
                   element={<ProjectMonthlyDataForm />}
+                />
+                <Route
+                  path="/projects/:projectId/insights"
+                  element={<ProjectInsights />}
+                />
+                <Route
+                  path="/projects/:projectId/monthly-insights"
+                  element={<MonthlyInsights />}
                 />
                 <Route path="*" element={<NotFound />} />
               </Routes>
