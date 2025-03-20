@@ -53,7 +53,7 @@ const ProjectMonthlyDataForm: React.FC = () => {
     };
 
     (currentData.id
-      ? updateMonthlyData(Number(projectId), currentData.id, payload)
+      ? updateMonthlyData(currentData.id, payload)
       : createMonthlyData(Number(projectId), payload)
     )
       .then(() => navigate(`/projects/${projectId}/monthly-data`))
