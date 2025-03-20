@@ -49,3 +49,15 @@ export const updateMonthlyData = (
 
 export const deleteMonthlyData = (projectId: number, dataId: number) =>
   axios.delete(`${baseUrl}/project/${projectId}/monthly-data/${dataId}`);
+
+export const getProjectInsights = (projectId: number) =>
+  axios.get(`${baseUrl}/project/${projectId}/insights`);
+
+export const getMonthlyInsights = (
+  projectId: number,
+  month: number,
+  year: number
+) =>
+  axios.get(
+    `${baseUrl}/project/${projectId}/monthly-insights?month=${month}&year=${year}`
+  );

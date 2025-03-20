@@ -15,6 +15,7 @@ export interface Project {
   readinessLevel?: number;
   methodology?: string;
   monthlyData?: ProjectMonthlyData[];
+  overallROI?: number;
 }
 
 export type { ProjectMonthlyData };
