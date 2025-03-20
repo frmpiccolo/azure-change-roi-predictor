@@ -81,3 +81,18 @@ export const updateMonthlyInsight = (
     .then((r) => r.data);
 export const deleteMonthlyInsight = (id: number) =>
   api.delete(`/ProjectMonthlyInsight/${id}`);
+
+export const getMonthlyInsightById = (id: number) =>
+  api
+    .get<ProjectMonthlyInsight>(`/ProjectMonthlyInsight/${id}`)
+    .then((r) => r.data);
+
+// Project Insight por ID
+export const getProjectInsightById = (id: number) =>
+  api.get<ProjectInsight>(`/ProjectInsight/${id}`).then((r) => r.data);
+
+// Monthly Data por ProjectId (renomeado corretamente)
+export const getMonthlyDataByProject = (projectId: number) =>
+  api
+    .get<ProjectMonthlyData[]>(`/ProjectMonthlyData/project/${projectId}`)
+    .then((r) => r.data);

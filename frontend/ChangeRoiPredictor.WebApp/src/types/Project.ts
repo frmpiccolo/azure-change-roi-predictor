@@ -1,3 +1,5 @@
+import { ProjectMonthlyData } from './ProjectMonthlyData';
+
 export interface Project {
   id: number;
   name: string;
@@ -12,6 +14,10 @@ export interface Project {
   riskLevel?: number;
   readinessLevel?: number;
   methodology?: string;
+  overallROI?: number | null;
+  projectInsights?: any;
+  monthlyData?: ProjectMonthlyData[];
+  computedROI?: string | null;
 }
 
 export type CreateProjectDto = Omit<Project, 'id'>;

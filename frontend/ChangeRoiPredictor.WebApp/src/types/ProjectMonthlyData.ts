@@ -7,6 +7,7 @@ export interface ProjectMonthlyData {
   expectedResult: number;
   obtainedResult?: number;
   monthlyROI?: number;
+  projectMonthlyInsights?: any;
 }
 
 export type CreateProjectMonthlyDataDto = Omit<
