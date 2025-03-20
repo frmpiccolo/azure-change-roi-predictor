@@ -7,19 +7,37 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddAzureKeyVault(
-    new Uri(builder.Configuration["AzureOptions:AzureKeyVaultUrl"]!),
-    new DefaultAzureCredential());
+// Optional: Only add Azure Key Vault if not in development
+// or if you want Key Vault secrets in development as well.
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(builder.Configuration["AzureOptions:AzureKeyVaultUrl"]!),
+        new DefaultAzureCredential());
+}
 
+// Bind your custom options
 builder.Services.Configure<AzureKeyVaultOptions>(builder.Configuration);
 builder.Services.Configure<AzureOptions>(builder.Configuration.GetSection(nameof(AzureOptions)));
 
 // Configure SQL Server connection.
 builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
 {
-    AzureKeyVaultOptions azureKeyVaultOptions = serviceProvider.GetRequiredService<IOptions<AzureKeyVaultOptions>>().Value;
+    var env = serviceProvider.GetRequiredService<IHostEnvironment>();
+    var config = serviceProvider.GetRequiredService<IConfiguration>();
+    var azureKeyVaultOptions = serviceProvider.GetRequiredService<IOptions<AzureKeyVaultOptions>>().Value;
 
-    options.UseAzureSql(azureKeyVaultOptions.AzureSqlConnectionString);
+    if (env.IsDevelopment())
+    {
+        // Use the local connection string in development
+        string localConnectionString = config["AzureSqlConnectionString"] ?? "";
+        options.UseSqlServer(localConnectionString);
+    }
+    else
+    {
+        // Use Azure Key Vault connection string in non-development (production) mode
+        options.UseAzureSql(azureKeyVaultOptions.AzureSqlConnectionString);
+    }
 });
 
 // Register project and monthly data services.
@@ -28,6 +46,8 @@ builder.Services.AddScoped<IProjectMonthlyDataService, ProjectMonthlyDataService
 builder.Services.AddScoped<IRoiService, RoiService>();
 builder.Services.AddScoped<IBlobService, BlobService>();
 builder.Services.AddScoped<IProjectMonthlyDataService, ProjectMonthlyDataService>();
+builder.Services.AddScoped<IProjectInsightService, ProjectInsightService>();
+builder.Services.AddScoped<IProjectMonthlyInsightService, ProjectMonthlyInsightService>();
 
 // Configure CORS: read allowed origins from configuration; default to localhost:3000 if none provided.
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();

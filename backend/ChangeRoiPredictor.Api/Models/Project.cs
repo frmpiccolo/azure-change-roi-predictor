@@ -89,7 +89,17 @@ public class Project
     public string? Methodology { get; set; }
 
     /// <summary>
+    /// Overall ROI of the project.
+    /// </summary>
+    public decimal? OverallROI { get; set; }
+
+    /// <summary>
+    /// Collection of insights for the project.
+    /// </summary>
+    public ICollection<ProjectInsight>? ProjectInsights { get; set; }
+
+    /// <summary>
     /// Collection of monthly data entries for the project.
     /// </summary>
-    public required ICollection<ProjectMonthlyData> MonthlyData { get; set; }
+    public ICollection<ProjectMonthlyData>? MonthlyData { get; set; }
 }

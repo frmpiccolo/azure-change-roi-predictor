@@ -9,6 +9,9 @@ namespace ChangeRoiPredictor.Api.Data
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectMonthlyData> ProjectMonthlyData { get; set; }
+        public DbSet<ProjectInsight> ProjectInsights { get; set; }
+
+        public DbSet<ProjectMonthlyInsight> ProjectMonthlyInsights { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

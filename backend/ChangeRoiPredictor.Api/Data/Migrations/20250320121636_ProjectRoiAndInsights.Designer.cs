@@ -4,6 +4,7 @@ using ChangeRoiPredictor.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChangeRoiPredictor.Api.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250320121636_ProjectRoiAndInsights")]
+    partial class ProjectRoiAndInsights
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,7 +97,7 @@ namespace ChangeRoiPredictor.Api.Data.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectInsights");
+                    b.ToTable("ProjectInsight");
                 });
 
             modelBuilder.Entity("ChangeRoiPredictor.Api.Models.ProjectMonthlyData", b =>
@@ -155,7 +158,7 @@ namespace ChangeRoiPredictor.Api.Data.Migrations
 
                     b.HasIndex("ProjectMonthlyDataId");
 
-                    b.ToTable("ProjectMonthlyInsights");
+                    b.ToTable("ProjectMonthlyInsight");
                 });
 
             modelBuilder.Entity("ChangeRoiPredictor.Api.Models.ProjectInsight", b =>
