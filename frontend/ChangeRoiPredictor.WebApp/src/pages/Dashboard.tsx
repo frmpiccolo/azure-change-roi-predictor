@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,9 +9,10 @@ import {
   Title,
   Tooltip,
   Legend,
+  ArcElement,
   ChartData,
 } from 'chart.js';
-import { getProjects } from '../services/apiService'; // Adjust the path as needed
+import { getProjects } from '../services/apiService';
 import { Project } from '../types/Project';
 
 ChartJS.register(
@@ -21,13 +22,14 @@ ChartJS.register(
   PointElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ArcElement
 );
 
 const Dashboard: React.FC = (): JSX.Element => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [selectedMonthYear, setSelectedMonthYear] = useState<string>(''); // stores 'YYYY-MM' from input
+  const [selectedMonthYear, setSelectedMonthYear] = useState<string>('All');
 
   useEffect(() => {
     getProjects().then((data) => {
@@ -38,20 +40,18 @@ const Dashboard: React.FC = (): JSX.Element => {
     });
   }, []);
 
-  // Calculate aggregated indicators
   const totalProjects = projects.length;
   const totalBudget = projects.reduce(
     (acc, project) => acc + project.totalBudget,
     0
   );
   const avgBudget =
-    totalProjects > 0 ? (totalBudget / totalProjects).toFixed(2) : 0;
+    totalProjects > 0 ? (totalBudget / totalProjects).toFixed(2) : '0';
   const totalPeopleAffected = projects.reduce(
     (acc, project) => acc + project.numberOfPeopleAffected,
     0
   );
 
-  // Calculate ROI for each project that has monthly data
   let roiSum = 0;
   let roiCount = 0;
   projects.forEach((project) => {
@@ -70,7 +70,6 @@ const Dashboard: React.FC = (): JSX.Element => {
           100;
         roiSum += roi;
         roiCount++;
-        // Add the calculated ROI to the project object for chart usage
         project.computedROI = roi.toFixed(2);
       } else {
         project.computedROI = null;
@@ -79,7 +78,6 @@ const Dashboard: React.FC = (): JSX.Element => {
   });
   const avgROI = roiCount > 0 ? (roiSum / roiCount).toFixed(2) : 'N/A';
 
-  // Data for the bar chart: ROI per project
   const barChartData = {
     labels: projects.filter((p) => p.computedROI != null).map((p) => p.name),
     datasets: [
@@ -95,48 +93,83 @@ const Dashboard: React.FC = (): JSX.Element => {
     ],
   };
 
-  // -----------------------------
-  // Monthly Data (Expected vs. Obtained) - Bar Chart
-  // -----------------------------
-  // We'll filter the selected project's monthlyData by the chosen month/year
-  // and display a bar chart comparing Expected vs. Obtained.
+  const availablePeriods: string[] =
+    selectedProject?.monthlyData
+      ?.map((md) => {
+        const date = new Date(md.year, md.month - 1);
+        return `${date.toLocaleString('default', { month: 'short' })}/${md.year}`;
+      })
+      .filter((v, i, a) => a.indexOf(v) === i)
+      .sort(
+        (a, b) => new Date('1 ' + a).getTime() - new Date('1 ' + b).getTime()
+      ) || [];
 
-  // 1) Parse the month/year chosen by the user (format: "YYYY-MM").
-  let filteredMonthlyData = null;
-  if (selectedProject?.monthlyData && selectedMonthYear) {
-    const [yearStr, monthStr] = selectedMonthYear.split('-');
-    const year = parseInt(yearStr);
-    const month = parseInt(monthStr);
-
-    // 2) Find the entry that matches this month/year (assuming unique entries).
-    filteredMonthlyData = selectedProject.monthlyData.find(
-      (md) => md.year === year && md.month === month
+  let monthlyDataToDisplay = selectedProject?.monthlyData || [];
+  if (selectedMonthYear !== 'All') {
+    const [monthLabel, year] = selectedMonthYear.split('/');
+    const monthIndex = new Date(`${monthLabel} 1, ${year}`).getMonth() + 1;
+    const yearNum = parseInt(year);
+    monthlyDataToDisplay = monthlyDataToDisplay.filter(
+      (md) => md.month === monthIndex && md.year === yearNum
     );
   }
 
-  // 3) Build the bar chart data comparing Expected vs. Obtained.
   const monthlyComparisonChartData: ChartData<'bar', number[], unknown> = {
-    labels: [],
-    datasets: [],
-  };
-
-  if (filteredMonthlyData) {
-    monthlyComparisonChartData.labels = [
-      `${filteredMonthlyData.month}/${filteredMonthlyData.year}`,
-    ];
-    monthlyComparisonChartData.datasets = [
+    labels: monthlyDataToDisplay.map((md) => `${md.month}/${md.year}`),
+    datasets: [
       {
         label: 'Expected Result',
-        data: [filteredMonthlyData.expectedResult],
+        data: monthlyDataToDisplay.map((md) => md.expectedResult),
         backgroundColor: 'rgba(54, 162, 235, 0.6)',
       },
       {
         label: 'Obtained Result',
-        data: [filteredMonthlyData.obtainedResult ?? 0],
+        data: monthlyDataToDisplay.map((md) => md.obtainedResult ?? 0),
         backgroundColor: 'rgba(255, 99, 132, 0.6)',
       },
-    ];
-  }
+    ],
+  };
+
+  const projectTypeCounts = projects.reduce(
+    (acc, proj) => {
+      const key = proj.methodology || 'Unknown';
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  const projectTypeData = {
+    labels: Object.keys(projectTypeCounts),
+    datasets: [
+      {
+        label: 'Projects by Type',
+        data: Object.values(projectTypeCounts),
+        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
+      },
+    ],
+  };
+
+  let aboveExpected = 0,
+    belowExpected = 0;
+  projects.forEach((p) => {
+    p.monthlyData?.forEach((md) => {
+      if (md.obtainedResult !== undefined && md.obtainedResult !== null) {
+        if (md.obtainedResult > md.expectedResult) aboveExpected++;
+        else belowExpected++;
+      }
+    });
+  });
+
+  const performancePieData = {
+    labels: ['Above Expected', 'Below Expected'],
+    datasets: [
+      {
+        data: [aboveExpected, belowExpected],
+        backgroundColor: ['#28a745', '#dc3545'],
+      },
+    ],
+  };
 
   return (
     <div className="p-6">
@@ -147,22 +180,7 @@ const Dashboard: React.FC = (): JSX.Element => {
         <p className="mb-4">
           Use the sidebar to navigate through projects and view key insights.
         </p>
-
         <div className="divider"></div>
-
-        {/* Filter UI */}
-        <h3 className="font-semibold mb-2">🔍 Filter Projects</h3>
-        <form className="flex flex-col md:flex-row md:space-x-4">
-          <input
-            type="text"
-            placeholder="Project Name"
-            className="input input-bordered flex-1 mb-2 md:mb-0"
-          />
-          <input type="month" className="input input-bordered" />
-          <button type="submit" className="btn btn-primary mt-2 md:mt-0">
-            Search
-          </button>
-        </form>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -170,17 +188,14 @@ const Dashboard: React.FC = (): JSX.Element => {
           <div className="stat-title">Total Projects</div>
           <div className="stat-value">{totalProjects}</div>
         </div>
-
         <div className="stat shadow-xl bg-accent text-accent-content rounded-xl">
           <div className="stat-title">Total People Affected</div>
           <div className="stat-value">{totalPeopleAffected}</div>
         </div>
-
         <div className="stat shadow-xl bg-info text-info-content rounded-xl">
           <div className="stat-title">Average Budget</div>
           <div className="stat-value">${avgBudget}</div>
         </div>
-
         <div className="stat shadow-xl bg-warning text-warning-content rounded-xl">
           <div className="stat-title">Average ROI</div>
           <div className="stat-value">
@@ -189,32 +204,21 @@ const Dashboard: React.FC = (): JSX.Element => {
         </div>
       </div>
 
-      {/* ROI per Project */}
       <div className="mb-6">
         <h3 className="text-2xl font-bold mb-4">ROI per Project</h3>
-        {projects.filter((p) => p.computedROI != null).length > 0 ? (
+        {barChartData.labels.length > 0 ? (
           <Bar
             data={barChartData}
             options={{
               scales: {
                 y: {
                   beginAtZero: true,
-                  ticks: {
-                    callback: function (value) {
-                      return value + '%';
-                    },
-                  },
+                  ticks: { callback: (value) => value + '%' },
                 },
               },
               plugins: {
-                legend: {
-                  display: true,
-                  position: 'top',
-                },
-                title: {
-                  display: true,
-                  text: 'ROI per Project (%)',
-                },
+                legend: { display: true, position: 'top' },
+                title: { display: true, text: 'ROI per Project (%)' },
               },
             }}
           />
@@ -223,21 +227,19 @@ const Dashboard: React.FC = (): JSX.Element => {
         )}
       </div>
 
-      {/* Monthly Project Performance - Filter by Project & Month/Year */}
-      <div>
+      <div className="mb-6">
         <h3 className="text-2xl font-bold mb-4">Monthly Project Performance</h3>
-
-        {/* Select Project */}
         <div className="mb-4 flex flex-col md:flex-row md:space-x-4">
           <div>
             <label className="mr-2">Select a Project:</label>
             <select
-              value={selectedProject ? selectedProject.id : ''}
+              value={selectedProject?.id || ''}
               onChange={(e) => {
                 const proj = projects.find(
                   (p) => p.id === parseInt(e.target.value)
                 );
                 setSelectedProject(proj ?? null);
+                setSelectedMonthYear('All');
               }}
               className="select select-bordered"
             >
@@ -249,36 +251,33 @@ const Dashboard: React.FC = (): JSX.Element => {
             </select>
           </div>
 
-          {/* Select Month/Year */}
           <div>
             <label className="mr-2">Select Month/Year:</label>
-            <input
-              type="month"
+            <select
               value={selectedMonthYear}
               onChange={(e) => setSelectedMonthYear(e.target.value)}
-              className="input input-bordered"
-            />
+              className="select select-bordered"
+            >
+              <option value="All">All</option>
+              {availablePeriods.map((period) => (
+                <option key={period} value={period}>
+                  {period}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
-        {/* Bar Chart: Expected vs. Obtained for the chosen month/year */}
-        {selectedProject && filteredMonthlyData ? (
+        {monthlyDataToDisplay.length > 0 ? (
           <Bar
             data={monthlyComparisonChartData}
             options={{
-              scales: {
-                y: {
-                  beginAtZero: true,
-                },
-              },
+              scales: { y: { beginAtZero: true } },
               plugins: {
-                legend: {
-                  display: true,
-                  position: 'top',
-                },
+                legend: { display: true, position: 'top' },
                 title: {
                   display: true,
-                  text: `Monthly Performance - ${selectedProject.name}`,
+                  text: `Monthly Performance - ${selectedProject?.name}`,
                 },
               },
             }}
@@ -286,6 +285,18 @@ const Dashboard: React.FC = (): JSX.Element => {
         ) : (
           <p>No monthly data available for the selected filters.</p>
         )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 className="text-2xl font-bold mb-4">Projects by Methodology</h3>
+          <Pie data={projectTypeData} />
+        </div>
+
+        <div>
+          <h3 className="text-2xl font-bold mb-4">Performance Overview</h3>
+          <Pie data={performancePieData} />
+        </div>
       </div>
     </div>
   );

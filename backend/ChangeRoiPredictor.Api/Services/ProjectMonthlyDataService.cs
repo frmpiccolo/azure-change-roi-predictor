@@ -27,7 +27,9 @@ namespace ChangeRoiPredictor.Api.Services
                 MonthlyBudget = m.MonthlyBudget,
                 MonthlyPeopleImpacted = m.MonthlyPeopleImpacted,
                 ExpectedResult = m.ExpectedResult,
-                ObtainedResult = m.ObtainedResult
+                ObtainedResult = m.ObtainedResult,
+                MonthlyROI = m.MonthlyROI,
+                ProjectMonthlyInsights = m.ProjectMonthlyInsights
             });
         }
 
@@ -45,7 +47,9 @@ namespace ChangeRoiPredictor.Api.Services
                 MonthlyBudget = data.MonthlyBudget,
                 MonthlyPeopleImpacted = data.MonthlyPeopleImpacted,
                 ExpectedResult = data.ExpectedResult,
-                ObtainedResult = data.ObtainedResult
+                ObtainedResult = data.ObtainedResult,
+                MonthlyROI = data.MonthlyROI,
+                ProjectMonthlyInsights = data.ProjectMonthlyInsights
             };
         }
 
@@ -59,7 +63,7 @@ namespace ChangeRoiPredictor.Api.Services
                 MonthlyBudget = dto.MonthlyBudget,
                 MonthlyPeopleImpacted = dto.MonthlyPeopleImpacted,
                 ExpectedResult = dto.ExpectedResult,
-                ObtainedResult = dto.ObtainedResult
+                ObtainedResult = dto.ObtainedResult                 
             };
 
             _context.ProjectMonthlyData.Add(monthlyData);
@@ -89,6 +93,8 @@ namespace ChangeRoiPredictor.Api.Services
             monthlyData.MonthlyPeopleImpacted = dto.MonthlyPeopleImpacted;
             monthlyData.ExpectedResult = dto.ExpectedResult;
             monthlyData.ObtainedResult = dto.ObtainedResult;
+            monthlyData.MonthlyROI = dto.MonthlyROI;
+            monthlyData.ProjectMonthlyInsights = dto.ProjectMonthlyInsights;    
 
             await _context.SaveChangesAsync();
 
@@ -100,7 +106,9 @@ namespace ChangeRoiPredictor.Api.Services
                 MonthlyBudget = monthlyData.MonthlyBudget,
                 MonthlyPeopleImpacted = monthlyData.MonthlyPeopleImpacted,
                 ExpectedResult = monthlyData.ExpectedResult,
-                ObtainedResult = monthlyData.ObtainedResult
+                ObtainedResult = monthlyData.ObtainedResult,
+                MonthlyROI = monthlyData.MonthlyROI,
+                ProjectMonthlyInsights = monthlyData.ProjectMonthlyInsights
             };
         }
 
