@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-    .btn {
-        @apply px-12 py-6 text-sm rounded-md;
-    }
+  .btn {
+    @apply px-12 py-6 text-sm rounded-md;
+  }
 }
