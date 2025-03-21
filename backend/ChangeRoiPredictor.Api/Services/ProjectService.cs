@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace ChangeRoiPredictor.Api.Services
 {
@@ -35,11 +36,17 @@ namespace ChangeRoiPredictor.Api.Services
             var project = new Project
             {
                 Name = dto.Name,
+                Description = dto.Description, 
                 DurationInMonths = dto.DurationInMonths,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
                 TotalBudget = dto.TotalBudget,
                 NumberOfPeopleAffected = dto.NumberOfPeopleAffected,
+                RiskLevel = dto.RiskLevel, 
+                ReadinessLevel = dto.ReadinessLevel, 
+                EngagementScore = dto.EngagementScore, 
+                ComplexityRating = dto.ComplexityRating, 
+                Methodology = dto.Methodology, 
                 MonthlyData = dto.MonthlyData?.Select(m => new ProjectMonthlyData
                 {
                     Month = m.Month,
@@ -67,14 +74,22 @@ namespace ChangeRoiPredictor.Api.Services
                 return null;
 
             project.Name = dto.Name;
+            project.Description = dto.Description; 
             project.DurationInMonths = dto.DurationInMonths;
             project.StartDate = dto.StartDate;
             project.EndDate = dto.EndDate;
             project.TotalBudget = dto.TotalBudget;
+            project.RiskLevel = dto.RiskLevel;
+            project.ReadinessLevel = dto.ReadinessLevel;
+            project.EngagementScore = dto.EngagementScore;
+            project.ComplexityRating = dto.ComplexityRating; 
+            project.Methodology = dto.Methodology; 
             project.NumberOfPeopleAffected = dto.NumberOfPeopleAffected;
 
             // Update monthly data: simple approach by removing existing data and adding new data.
-            _context.ProjectMonthlyData.RemoveRange(project.MonthlyData);
+            if (project.MonthlyData != null)
+                _context.ProjectMonthlyData.RemoveRange(project.MonthlyData);
+
             if (dto.MonthlyData != null)
             {
                 project.MonthlyData = [.. dto.MonthlyData.Select(m => new ProjectMonthlyData
@@ -112,11 +127,17 @@ namespace ChangeRoiPredictor.Api.Services
             {
                 Id = project.Id,
                 Name = project.Name,
+                Description = project.Description, 
                 DurationInMonths = project.DurationInMonths,
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
                 TotalBudget = project.TotalBudget,
                 NumberOfPeopleAffected = project.NumberOfPeopleAffected,
+                RiskLevel = project.RiskLevel,
+                ReadinessLevel = project.ReadinessLevel,
+                EngagementScore = project.EngagementScore,
+                ComplexityRating = project.ComplexityRating,
+                Methodology = project.Methodology,                
                 MonthlyData = project.MonthlyData?.Select(m => new ProjectMonthlyDataDto
                 {
                     Id = m.Id,

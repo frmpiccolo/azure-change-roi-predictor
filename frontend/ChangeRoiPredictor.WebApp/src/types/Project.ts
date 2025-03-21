@@ -14,7 +14,11 @@ export interface Project {
   riskLevel?: number;
   readinessLevel?: number;
   methodology?: string;
+  overallROI?: number | null;
+  projectInsights?: any;
   monthlyData?: ProjectMonthlyData[];
+  computedROI?: string | null;
 }
 
-export type { ProjectMonthlyData };
+export type CreateProjectDto = Omit<Project, 'id'>;
+export type UpdateProjectDto = CreateProjectDto;

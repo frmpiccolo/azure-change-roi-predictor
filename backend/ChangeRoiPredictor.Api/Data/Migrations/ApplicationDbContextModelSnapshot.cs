@@ -55,6 +55,9 @@ namespace ChangeRoiPredictor.Api.Data.Migrations
                     b.Property<int>("NumberOfPeopleAffected")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("OverallROI")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int?>("ReadinessLevel")
                         .HasColumnType("int");
 
@@ -70,6 +73,28 @@ namespace ChangeRoiPredictor.Api.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("ChangeRoiPredictor.Api.Models.ProjectInsight", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectInsights");
                 });
 
             modelBuilder.Entity("ChangeRoiPredictor.Api.Models.ProjectMonthlyData", b =>
@@ -92,7 +117,10 @@ namespace ChangeRoiPredictor.Api.Data.Migrations
                     b.Property<int>("MonthlyPeopleImpacted")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ObtainedResult")
+                    b.Property<decimal?>("MonthlyROI")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("ObtainedResult")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProjectId")
@@ -108,6 +136,37 @@ namespace ChangeRoiPredictor.Api.Data.Migrations
                     b.ToTable("ProjectMonthlyData");
                 });
 
+            modelBuilder.Entity("ChangeRoiPredictor.Api.Models.ProjectMonthlyInsight", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProjectMonthlyDataId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectMonthlyDataId");
+
+                    b.ToTable("ProjectMonthlyInsights");
+                });
+
+            modelBuilder.Entity("ChangeRoiPredictor.Api.Models.ProjectInsight", b =>
+                {
+                    b.HasOne("ChangeRoiPredictor.Api.Models.Project", null)
+                        .WithMany("ProjectInsights")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ChangeRoiPredictor.Api.Models.ProjectMonthlyData", b =>
                 {
                     b.HasOne("ChangeRoiPredictor.Api.Models.Project", "Project")
@@ -119,9 +178,25 @@ namespace ChangeRoiPredictor.Api.Data.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("ChangeRoiPredictor.Api.Models.ProjectMonthlyInsight", b =>
+                {
+                    b.HasOne("ChangeRoiPredictor.Api.Models.ProjectMonthlyData", null)
+                        .WithMany("ProjectMonthlyInsights")
+                        .HasForeignKey("ProjectMonthlyDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ChangeRoiPredictor.Api.Models.Project", b =>
                 {
                     b.Navigation("MonthlyData");
+
+                    b.Navigation("ProjectInsights");
+                });
+
+            modelBuilder.Entity("ChangeRoiPredictor.Api.Models.ProjectMonthlyData", b =>
+                {
+                    b.Navigation("ProjectMonthlyInsights");
                 });
 #pragma warning restore 612, 618
         }
