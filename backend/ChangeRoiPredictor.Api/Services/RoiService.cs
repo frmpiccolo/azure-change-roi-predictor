@@ -24,22 +24,12 @@ public class RoiService : IRoiService
         _instructionsPath = Path.Combine(webHostEnvironment.ContentRootPath, "Ai", "Instructions");
     }
 
-    public async Task<ICollection<ProjectInsight>?> GetProjectInsightsAsync(ProjectDto projectDto)
+    public async Task<ProjectDto?> GenerateProjectInsightsAsync(ProjectDto projectDto)
     {
         var systemMessage = ChatMessage.CreateSystemMessage(File.ReadAllText(Path.Combine(_instructionsPath, "ProjectRoiInstructions.txt")));
         var userMessage = ChatMessage.CreateUserMessage(JsonSerializer.Serialize(projectDto));
         var chatCompletion = await _chatClient.CompleteChatAsync(systemMessage, userMessage);
 
-        var insights = JsonSerializer.Deserialize<ICollection<ProjectInsight>>(chatCompletion.Value.Content.First().Text);
-
-        if (insights != null)
-        {
-            foreach (var insight in insights)
-            {
-                
-            }
-        }
-
-        return insights;
+        return JsonSerializer.Deserialize<ProjectDto>(chatCompletion.Value.Content.First().Text);
     }
 }

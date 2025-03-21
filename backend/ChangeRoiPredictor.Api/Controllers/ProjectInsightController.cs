@@ -1,20 +1,14 @@
 ﻿using ChangeRoiPredictor.Api.DTOs;
 using ChangeRoiPredictor.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace ChangeRoiPredictor.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProjectInsightController : ControllerBase
+public class ProjectInsightController(IProjectInsightService projectInsightService) : ControllerBase
 {
-    private readonly IProjectInsightService _projectInsightService;
-
-    public ProjectInsightController(IProjectInsightService projectInsightService)
-    {
-        _projectInsightService = projectInsightService;
-    }
+    private readonly IProjectInsightService _projectInsightService = projectInsightService;
 
     // GET: api/ProjectInsight/project/{projectId}
     [HttpGet("project/{projectId}")]

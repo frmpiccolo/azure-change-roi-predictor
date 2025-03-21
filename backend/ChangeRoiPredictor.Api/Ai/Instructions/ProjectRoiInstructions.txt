@@ -18,7 +18,7 @@ You will receive a JSON object with the following structure:
   "RiskLevel": 0,
   "ReadinessLevel": 0,
   "Methodology": "string",
-  "monthlyData": [
+  "MonthlyData": [
     {
       "Id": 0,
       "ProjectId": 0,
@@ -59,6 +59,16 @@ You will receive a JSON object with the following structure:
   - *MonthlyPeopleImpacted* (int)
   - *ExpectedResult* (decimal(18,2))
   - *ObtainedResult* (decimal(18,2))
+
+  *ProjectInsight* table:
+  - *Id* (int, primary key)
+  - *projectId* (int, foreign key)
+  - *Description* (nvarchar(max))
+
+  *ProjectMonthlyDataInsight* table:
+  - *Id* (int, primary key)
+  - *ProjectMonthlyDataId* (int, foreign key)
+  - *Description* (nvarchar(max))
 
 ### 2. ROI Calculation Requirements
 
@@ -107,11 +117,15 @@ Return a JSON object that *mirrors* the original structure but includes *ROI* an
     "ReadinessLevel": 0,
     "Methodology": "string",
     "OverallROI": 15.2, // ROI for the entire project in percentage
-    "OverallInsights": [
-      "string",
-      "string"
+    "ProjectInsights": [
+      {
+        "Description": "string"
+      },
+      {
+        "Description": "string"
+      }
     ],
-    "monthlyData": [
+    "MonthlyData": [
     {
       "Id": 0,
       "ProjectId": 0,
@@ -122,9 +136,13 @@ Return a JSON object that *mirrors* the original structure but includes *ROI* an
       "ExpectedResult": 0.0,
       "ObtainedResult": 0.0,
       "MonthlyROI": 10.4,     // ROI for this month in percentage
-      "MonthlyInsights": [
-        "string",
-        "string"
+      "ProjectMonthlyInsights": [
+        {
+          "Description": "string"
+        },
+        {
+          "Description": "string"
+        }
       ]
     }
     // ... Additional monthly entries ...

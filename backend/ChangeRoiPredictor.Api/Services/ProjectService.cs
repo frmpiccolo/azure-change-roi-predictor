@@ -26,6 +26,8 @@ namespace ChangeRoiPredictor.Api.Services
         {
             var project = await _context.Projects
                 .Include(p => p.MonthlyData)
+                .ThenInclude(md => md.ProjectMonthlyInsights)
+                .Include(p => p.ProjectInsights)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             return project != null ? MapToProjectDto(project) : null;
@@ -36,17 +38,17 @@ namespace ChangeRoiPredictor.Api.Services
             var project = new Project
             {
                 Name = dto.Name,
-                Description = dto.Description, 
+                Description = dto.Description,
                 DurationInMonths = dto.DurationInMonths,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
                 TotalBudget = dto.TotalBudget,
                 NumberOfPeopleAffected = dto.NumberOfPeopleAffected,
-                RiskLevel = dto.RiskLevel, 
-                ReadinessLevel = dto.ReadinessLevel, 
-                EngagementScore = dto.EngagementScore, 
-                ComplexityRating = dto.ComplexityRating, 
-                Methodology = dto.Methodology, 
+                RiskLevel = dto.RiskLevel,
+                ReadinessLevel = dto.ReadinessLevel,
+                EngagementScore = dto.EngagementScore,
+                ComplexityRating = dto.ComplexityRating,
+                Methodology = dto.Methodology,
                 MonthlyData = dto.MonthlyData?.Select(m => new ProjectMonthlyData
                 {
                     Month = m.Month,
@@ -74,7 +76,7 @@ namespace ChangeRoiPredictor.Api.Services
                 return null;
 
             project.Name = dto.Name;
-            project.Description = dto.Description; 
+            project.Description = dto.Description;
             project.DurationInMonths = dto.DurationInMonths;
             project.StartDate = dto.StartDate;
             project.EndDate = dto.EndDate;
@@ -82,9 +84,10 @@ namespace ChangeRoiPredictor.Api.Services
             project.RiskLevel = dto.RiskLevel;
             project.ReadinessLevel = dto.ReadinessLevel;
             project.EngagementScore = dto.EngagementScore;
-            project.ComplexityRating = dto.ComplexityRating; 
-            project.Methodology = dto.Methodology; 
+            project.ComplexityRating = dto.ComplexityRating;
+            project.Methodology = dto.Methodology;
             project.NumberOfPeopleAffected = dto.NumberOfPeopleAffected;
+            project.OverallROI = dto.OverallROI;
 
             // Update monthly data: simple approach by removing existing data and adding new data.
             if (project.MonthlyData != null)
@@ -99,7 +102,19 @@ namespace ChangeRoiPredictor.Api.Services
                     MonthlyBudget = m.MonthlyBudget,
                     MonthlyPeopleImpacted = m.MonthlyPeopleImpacted,
                     ExpectedResult = m.ExpectedResult,
-                    ObtainedResult = m.ObtainedResult
+                    ObtainedResult = m.ObtainedResult,
+                    MonthlyROI = m.MonthlyROI,
+                    ProjectMonthlyInsights = m.ProjectMonthlyInsights?.Select(mi => new ProjectMonthlyInsight(){
+                        Description = mi.Description
+                    }).ToList()
+                })];
+            }
+
+            if (dto.ProjectInsights != null)
+            {
+                project.ProjectInsights = [.. dto.ProjectInsights.Select(pi => new ProjectInsight()
+                {
+                    Description = pi.Description
                 })];
             }
 
@@ -127,7 +142,7 @@ namespace ChangeRoiPredictor.Api.Services
             {
                 Id = project.Id,
                 Name = project.Name,
-                Description = project.Description, 
+                Description = project.Description,
                 DurationInMonths = project.DurationInMonths,
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
@@ -137,7 +152,8 @@ namespace ChangeRoiPredictor.Api.Services
                 ReadinessLevel = project.ReadinessLevel,
                 EngagementScore = project.EngagementScore,
                 ComplexityRating = project.ComplexityRating,
-                Methodology = project.Methodology,                
+                Methodology = project.Methodology,
+                OverallROI = project.OverallROI,
                 MonthlyData = project.MonthlyData?.Select(m => new ProjectMonthlyDataDto
                 {
                     Id = m.Id,
@@ -146,8 +162,21 @@ namespace ChangeRoiPredictor.Api.Services
                     MonthlyBudget = m.MonthlyBudget,
                     MonthlyPeopleImpacted = m.MonthlyPeopleImpacted,
                     ExpectedResult = m.ExpectedResult,
-                    ObtainedResult = m.ObtainedResult
-                }).ToList() ?? []
+                    ObtainedResult = m.ObtainedResult,
+                    MonthlyROI = m.MonthlyROI,
+                    ProjectMonthlyInsights = m.ProjectMonthlyInsights?.Select(pmi => new ProjectMonthlyInsightDto()
+                    {
+                        Id = pmi.Id,
+                        Description = pmi.Description,
+                        ProjectMonthlyDataId = pmi.ProjectMonthlyDataId
+                    }).ToList()
+                }).ToList(),
+                ProjectInsights = project.ProjectInsights?.Select(pi => new ProjectInsightDto()
+                {
+                    Id = pi.Id,
+                    Description = pi.Description,
+                    ProjectId = pi.ProjectId
+                }).ToList()
             };
         }
     }

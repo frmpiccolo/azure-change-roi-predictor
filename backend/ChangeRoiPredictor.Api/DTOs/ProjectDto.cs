@@ -74,6 +74,8 @@ public class ProjectDto
     /// </summary>
     public string? Methodology { get; set; }
 
+
+
     /// <summary>
     /// Overall ROI of the project.
     /// </summary>
@@ -82,10 +84,10 @@ public class ProjectDto
     /// <summary>
     /// Collection of insights for the project.
     /// </summary>
-    public ICollection<ProjectInsight>? ProjectInsights { get; set; }
+    public ICollection<ProjectInsightDto>? ProjectInsights { get; set; }
 
     /// <summary>
     /// Collection of monthly data entries for the project.
     /// </summary>
-    public IEnumerable<ProjectMonthlyDataDto>? MonthlyData { get; set; }    
+    public IEnumerable<ProjectMonthlyDataDto>? MonthlyData { get; set; }
 }
