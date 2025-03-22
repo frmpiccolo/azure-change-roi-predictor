@@ -57,5 +57,5 @@ public class UpdateProjectMonthlyDataDto
     /// <summary>
     /// Collection of insights for the project in the month.
     /// </summary>
-    public ICollection<ProjectMonthlyInsight>? ProjectMonthlyInsights { get; set; }
+    public ICollection<UpdateProjectMonthlyInsightDto>? ProjectMonthlyInsights { get; set; }
 }

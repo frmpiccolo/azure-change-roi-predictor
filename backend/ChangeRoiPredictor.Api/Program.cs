@@ -7,9 +7,8 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Optional: Only add Azure Key Vault if not in development
-// or if you want Key Vault secrets in development as well.
-if (!builder.Environment.IsDevelopment())
+// Set "UseAzureKeyVault": true to use the secrets from vault
+if (builder.Configuration.GetValue<bool>("UseAzureKeyVault"))
 {
     builder.Configuration.AddAzureKeyVault(
         new Uri(builder.Configuration["AzureOptions:AzureKeyVaultUrl"]!),
@@ -27,16 +26,15 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
     var config = serviceProvider.GetRequiredService<IConfiguration>();
     var azureKeyVaultOptions = serviceProvider.GetRequiredService<IOptions<AzureKeyVaultOptions>>().Value;
 
-    if (env.IsDevelopment())
+    // Set "UseAzureSql" : true in the appsettings to use sql in cloud else use local
+    if (builder.Configuration.GetValue<bool>("UseAzureSql"))
     {
-        // Use the local connection string in development
-        string localConnectionString = config["AzureSqlConnectionString"] ?? "";
-        options.UseSqlServer(localConnectionString);
+        options.UseAzureSql(azureKeyVaultOptions.AzureSqlConnectionString);
     }
     else
     {
-        // Use Azure Key Vault connection string in non-development (production) mode
-        options.UseAzureSql(azureKeyVaultOptions.AzureSqlConnectionString);
+        string localConnectionString = config["AzureSqlConnectionString"] ?? "";
+        options.UseSqlServer(localConnectionString);
     }
 });
 
@@ -53,7 +51,7 @@ builder.Services.AddScoped<IProjectMonthlyInsightService, ProjectMonthlyInsightS
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 if (allowedOrigins == null || allowedOrigins.Length == 0)
 {
-    allowedOrigins = new string[] { "http://localhost:3000" };
+    allowedOrigins = ["http://localhost:3000"];
 }
 
 builder.Services.AddCors(options =>
